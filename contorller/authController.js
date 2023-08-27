@@ -8,9 +8,14 @@ const createAndSendToken = (user, statusCode, res) => {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
+  user.password = undefined;
+
   res.status(statusCode).json({
     status: 'success',
     token,
+    data: {
+      user,
+    },
   });
 };
 
@@ -36,7 +41,7 @@ exports.login = catchAsyncError(async (req, res, next) => {
   }
 
   // 2) 사용자 존재 여부 확인 및 비밀번호 확인
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email }).select('+password -__v');
   if (!user || !(await user.checkPassword(password, user.password))) {
     return next(new CustomError('잘못된 이메일 혹은 비밀번호 입니다.', 401));
   }
