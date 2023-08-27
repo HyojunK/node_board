@@ -46,3 +46,36 @@ exports.getPost = async (req, res, next) => {
     },
   });
 };
+
+exports.updatePost = async (req, res, next) => {
+  const post = await Post.findByIdAndUpdate(req.params.id, req.body, {
+    // 업데이트 된 정보를 다시 전달받을지 여부
+    new: true,
+    // 유효성 검사 체크 여부
+    runValidators: true,
+  });
+
+  if (!post) {
+    return next(new CustomError('존재하지 않는 게시물입니다.', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      post,
+    },
+  });
+};
+
+exports.deletePost = async (req, res, next) => {
+  const post = await Post.findByIdAndDelete(req.params.id);
+
+  if (!post) {
+    return next(new CustomError('존재하지 않는 게시물입니다.', 404));
+  }
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+};
