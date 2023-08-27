@@ -19,6 +19,23 @@ const postSchema = new mongoose.Schema({
   },
 });
 
+//------------------------------[ PRE MIDDLEWARE START ]------------------------------//
+postSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'writer',
+    select: '-__v -email -role',
+  });
+
+  next();
+});
+//------------------------------[ PRE MIDDLEWARE END ]------------------------------//
+
+//------------------------------[ POST MIDDLEWARE START ]------------------------------//
+//------------------------------[ POST MIDDLEWARE END ]------------------------------//
+
+//------------------------------[ METHODS START ]------------------------------//
+//------------------------------[ METHODS END ]------------------------------//
+
 const Post = mongoose.model('Post', postSchema);
 
 module.exports = Post;
