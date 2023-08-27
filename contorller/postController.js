@@ -31,3 +31,18 @@ exports.getAllPosts = catchAsyncError(async (req, res, next) => {
     },
   });
 });
+
+exports.getPost = async (req, res, next) => {
+  const post = await Post.findById(req.params.id);
+
+  if (!post) {
+    return next(new CustomError('존재하지 않는 게시물입니다.', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      post,
+    },
+  });
+};
