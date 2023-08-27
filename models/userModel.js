@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+//------------------------------[ PRE MIDDLEWARE START ]------------------------------//
 // 비밀번호 암호화
 userSchema.pre('save', async function (next) {
   // 비밀번호 필드의 변경 여부 확인
@@ -36,6 +37,16 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
+//------------------------------[ PRE MIDDLEWARE END ]------------------------------//
+
+//------------------------------[ POST MIDDLEWARE START ]------------------------------//
+//------------------------------[ POST MIDDLEWARE END ]------------------------------//
+
+//------------------------------[ METHODS START ]------------------------------//
+userSchema.methods.checkPassword = async function (currentPassword, password) {
+  return await bcrypt.compare(currentPassword, password);
+};
+//------------------------------[ METHODS END ]------------------------------//
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
